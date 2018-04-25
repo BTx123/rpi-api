@@ -4,7 +4,8 @@ from flask_restful import Resource, Api, abort
 import logging
 
 
-PATH_TO_API = "/api/leds"
+ROUTE_API = "/api"
+ROUTE_LEDS = "/leds"
 DEBUG = True
 
 
@@ -56,11 +57,11 @@ def main():
     api = Api(app)
 
     # Add resources (API endpoints)
-    api.add_resource(HelloWorld, "/")
-    api.add_resource(LED, PATH_TO_API + "/<int:led_pin>")
+    api.add_resource(HelloWorld, "/api")
+    api.add_resource(LED, ROUTE_API + ROUTE_LEDS + "/<int:led_pin>")
 
     # Run the app
-    app.run(debug=DEBUG)
+    app.run(host="0.0.0.0", port=5000, debug=DEBUG)
 
 
 if __name__ == "__main__":
