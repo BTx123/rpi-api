@@ -4,6 +4,9 @@ LEDController.py
 gpiozero
 Basics Documentation: http://gpiozero.readthedocs.io/en/stable/recipes.html
 LED Documentation: http://gpiozero.readthedocs.io/en/stable/api_output.html?highlight=LED
+
+Raspberry Pi
+Pin Documentation: http://pi4j.com/pins/model-2b-rev1.html
 """
 
 import logging
