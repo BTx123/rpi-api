@@ -4,7 +4,7 @@ from flask_restful import Resource, Api, abort
 import logging
 
 
-PATH_TO_API = "/api/led"
+PATH_TO_API = "/api/leds"
 DEBUG = True
 
 
