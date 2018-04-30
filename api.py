@@ -4,7 +4,8 @@ from LEDController import LEDController
 import logging
 
 
-PATH_TO_API = "/api/leds"
+ROUTE_API = "/api"
+ROUTE_LEDS = "/leds"
 DEBUG = True
 
 #create a todo list ie list of the id and states of each pin, call the state and id in LED Controller, make a class for each pin, and then call it 
@@ -68,16 +69,19 @@ def main():
 
     # Add resources (API endpoints)
     api.add_resource(HelloWorld, "/api")
-    api.add_resource(LED, PATH_TO_API + "/<int:led_pin>")
+
+    api.add_resource(LED, ROUTE_API + ROUTE_LEDS + "/<int:led_pin>")
 
 
     #test 
-    api.add_resource(LED, PATH_TO_API + "/<int:led_pin>/on", endpoint="turn on LED by pin")
-    api.add_resource(LED, PATH_TO_API + "/<int:led_pin>/off", endpoint ="turn off LED by pin")
-    api.add_resource(LED, PATH_TO_API + "/<int:led_pin>/toggle", endpoint = "toggle LED by pin")
+    api.add_resource(LED,  ROUTE_API + ROUTE_LEDS + "/<int:led_pin>/on", endpoint="turn on LED by pin")
+    api.add_resource(LED,  ROUTE_API + ROUTE_LEDS + "/<int:led_pin>/off", endpoint ="turn off LED by pin")
+    api.add_resource(LED,  ROUTE_API + ROUTE_LEDS + "/<int:led_pin>/toggle", endpoint = "toggle LED by pin")
 
     # Run the app
+    #app.run(host="0.0.0.0", port=5000, debug=DEBUG)
     app.run(debug=DEBUG)
+    
 
 
 

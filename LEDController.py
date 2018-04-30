@@ -4,11 +4,18 @@ LEDController.py
 gpiozero
 Basics Documentation: http://gpiozero.readthedocs.io/en/stable/recipes.html
 LED Documentation: http://gpiozero.readthedocs.io/en/stable/api_output.html?highlight=LED
+
+Raspberry Pi
+Pin Documentation: http://pi4j.com/pins/model-2b-rev1.html
 """
 
-
-import gpiozero
 import logging
+try:
+    import gpiozero
+except Exception as e:
+    logging.log(logging.WARNING, "Falling back from gpiozero: {e}".format(e=e))
+    import gpiozero_psuedo as gpiozero
+    logging.log(logging.WARNING, "Now using psuedo gpiozero")
 
 
 # XXX: Not tested yet...
@@ -55,11 +62,10 @@ class LEDController:
 
 def main():
     from time import sleep
-    logging.basicConfig(level=logging.DEBUG, filename="log.txt",
+    logging.basicConfig(level=logging.DEBUG,
                         format="%(asctime)s - %(levelname)s - %(message)s")
     LED = 17
     led = LEDController(LED)
-    state = led.get_state()
     led.on()
     sleep(5)
     led.off()
