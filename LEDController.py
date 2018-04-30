@@ -64,7 +64,7 @@ def main():
     from time import sleep
     logging.basicConfig(level=logging.DEBUG,
                         format="%(asctime)s - %(levelname)s - %(message)s")
-    LED = 17
+    LED = 11
     led = LEDController(LED)
     led.on()
     sleep(5)
