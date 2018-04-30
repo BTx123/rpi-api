@@ -8,8 +8,7 @@ ROUTE_API = "/api"
 ROUTE_LEDS = "/leds"
 DEBUG = True
 
-# create a todo list ie list of the id and states of each pin, call the state and id in LED Controller, make a class for each pin, and then call it
-VALID_LEDS = [11]
+VALID_LEDS = [17]  # LED numbers should refer to GPIO number not RPi pin number
 leds = {led: LEDController(led) for led in VALID_LEDS}
 
 
