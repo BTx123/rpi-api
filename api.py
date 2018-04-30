@@ -9,9 +9,7 @@ ROUTE_LEDS = "/leds"
 DEBUG = True
 
 #create a todo list ie list of the id and states of each pin, call the state and id in LED Controller, make a class for each pin, and then call it 
-leds = {17: 'state,id' }
-
-led = LEDController(17) 
+leds = {17: LEDController(17) }
 
 def abort_if_LED_invalid(led_pin: int):
     """Abort the request if invalid pin is chosen and give 404."""
@@ -33,7 +31,7 @@ class LED(Resource):
     def get(self, led_pin: int) -> dict:
         """GET pin state."""
         abort_if_LED_invalid(led_pin)
-        state = led.get_state()
+        state = leds[17].get_state()
         logging.debug("GET: pin {pin} = {state}".format(
             pin=led_pin, state=state))
         return {
@@ -46,6 +44,17 @@ class LED(Resource):
         abort_if_LED_invalid(led_pin)
         logging.debug("POST: {command} pin {pin}".format(
             command=command, pin=led_pin))
+        #check for on, off, toggle
+        if command == "on": leds[led_pin].on() 
+        elif command == "off": leds[led_pin].off()
+        elif command == "toggle": leds[led_pin].toggle()
+        else: abort (404, message="Command not available.")
+        return {
+            "pin": led_pin,
+            "state": leds[led_pin].get_state()
+        }
+
+
 class LEDS(Resource): 
     def get(self): 
         return str(leds)
@@ -74,14 +83,12 @@ def main():
 
 
     #test 
-    api.add_resource(LED,  ROUTE_API + ROUTE_LEDS + "/<int:led_pin>/on", endpoint="turn on LED by pin")
-    api.add_resource(LED,  ROUTE_API + ROUTE_LEDS + "/<int:led_pin>/off", endpoint ="turn off LED by pin")
-    api.add_resource(LED,  ROUTE_API + ROUTE_LEDS + "/<int:led_pin>/toggle", endpoint = "toggle LED by pin")
+    api.add_resource(LED,  ROUTE_API + ROUTE_LEDS + "/<int:led_pin>/<string:command>", endpoint="turn on LED by pin")
 
     # Run the app
     #app.run(host="0.0.0.0", port=5000, debug=DEBUG)
     app.run(debug=DEBUG)
-    
+
 
 
 
