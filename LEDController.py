@@ -38,7 +38,7 @@ class LEDController:
         Return the current state of the LED pin.
         True for on, False for off.
         """
-        state = self._led.is_lit()
+        state = self._led.is_lit
         logging.debug(
             "get_state: pin {pin} = {state}".format(pin=self._pin, state=state))
         return state
@@ -57,7 +57,7 @@ class LEDController:
         """Toggle the LED state."""
         self._led.toggle()
         logging.debug("toggle: {pin} = {state}".format(
-            pin=self._pin, state=self._led.is_lit()))
+            pin=self._pin, state=self._led.is_lit))
 
 
 def main():
