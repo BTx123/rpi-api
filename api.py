@@ -1,16 +1,20 @@
 from flask import Flask
 from flask_restful import Resource, Api, abort
-# from LEDController import LEDController
+from LEDController import LEDController
 import logging
 
 
-PATH_TO_API = "/api/led"
+PATH_TO_API = "/api/leds"
 DEBUG = True
 
+#create a todo list ie list of the id and states of each pin, call the state and id in LED Controller, make a class for each pin, and then call it 
+leds = {17: 'state,id' }
+
+led = LEDController(17) 
 
 def abort_if_LED_invalid(led_pin: int):
     """Abort the request if invalid pin is chosen and give 404."""
-    if False:  # TODO: update condition
+    if led_pin not in leds:  # TODO: update condition
         abort(404, message="Pin {pin} not available.".format(pin=led_pin))
 
 
@@ -28,7 +32,7 @@ class LED(Resource):
     def get(self, led_pin: int) -> dict:
         """GET pin state."""
         abort_if_LED_invalid(led_pin)
-        state = "on"
+        state = led.get_state()
         logging.debug("GET: pin {pin} = {state}".format(
             pin=led_pin, state=state))
         return {
@@ -41,6 +45,10 @@ class LED(Resource):
         abort_if_LED_invalid(led_pin)
         logging.debug("POST: {command} pin {pin}".format(
             command=command, pin=led_pin))
+class LEDS(Resource): 
+    def get(self): 
+        return str(leds)
+
 
 
 def main():
@@ -51,16 +59,26 @@ def main():
     else:
         logger.setLevel(logging.CRITICAL)
 
+
     # Flask application
     app = Flask(__name__)
     api = Api(app)
 
+
+
     # Add resources (API endpoints)
-    api.add_resource(HelloWorld, "/")
+    api.add_resource(HelloWorld, "/api")
     api.add_resource(LED, PATH_TO_API + "/<int:led_pin>")
+
+
+    #test 
+    api.add_resource(LED, PATH_TO_API + "/<int:led_pin>/on", endpoint="turn on LED by pin")
+    api.add_resource(LED, PATH_TO_API + "/<int:led_pin>/off", endpoint ="turn off LED by pin")
+    api.add_resource(LED, PATH_TO_API + "/<int:led_pin>/toggle", endpoint = "toggle LED by pin")
 
     # Run the app
     app.run(debug=DEBUG)
+
 
 
 if __name__ == "__main__":
