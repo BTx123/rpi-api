@@ -79,7 +79,8 @@ class LEDS(Resource):
             for led in leds.values(): 
                 led.on()
         elif command == "toggle": 
-            led.toggle() for led in leds.values()
+            m = map(lambda led: led.toggle() , leds.values()) 
+            list(m)  
 
         le = []
         for l,k in leds.items(): 
