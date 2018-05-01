@@ -8,7 +8,7 @@ ROUTE_API = "/api"
 ROUTE_LEDS = "/leds"
 DEBUG = True
 
-VALID_LEDS = [17]  # LED numbers should refer to GPIO number not RPi pin number
+VALID_LEDS = [17,27,22]  # LED numbers should refer to GPIO number not RPi pin number
 leds = {led: LEDController(led) for led in VALID_LEDS}
 
 
@@ -66,7 +66,7 @@ class LEDS(Resource):
         for l,k in leds.items(): 
             le.append({"pin":l , "state": k.get_state()})
             print(le)
-            
+
         return {"pins": le }
 
     def post(self, command: str) -> dict: 
