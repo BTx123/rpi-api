@@ -76,8 +76,10 @@ class LEDS(Resource):
             for led in leds.values():
                 led.off()
         elif command == "on": 
-            for led in list(leds.values()): 
+            for led in leds.values(): 
                 led.on()
+        elif command == "toggle": 
+            led.toggle() for led in leds.values()
 
         le = []
         for l,k in leds.items(): 
