@@ -3,23 +3,20 @@ class LED:
 
     def __init__(self, led_pin, is_lit=False):
         self._led_pin = led_pin
-        self._is_lit = is_lit
-
-    def is_lit(self) -> bool:
-        return self._is_lit
+        self.is_lit = is_lit
 
     def on(self):
-        self._is_lit = True
+        self.is_lit = True
         print("LED {pin} turned on".format(pin=self._led_pin))
 
     def off(self):
-        self._is_lit = False
+        self.is_lit = False
         print("LED {pin} turned off".format(pin=self._led_pin))
 
     def toggle(self):
-        self._is_lit = not self._is_lit
+        self.is_lit = not self.is_lit
         print("LED {pin} toggled to {state}".format(
-            pin=self._led_pin, state=LED._bool_to_str(self._is_lit)))
+            pin=self._led_pin, state=LED._bool_to_str(self.is_lit)))
 
     @staticmethod
     def _bool_to_str(b: bool) -> str:
