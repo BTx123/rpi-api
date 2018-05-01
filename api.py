@@ -62,7 +62,34 @@ class LED(Resource):
 
 class LEDS(Resource):
     def get(self):
-        return str(leds)
+        le = []
+        for l,k in leds.items(): 
+            le.append({"pin":l , "state": k.get_state()})
+            print(le)
+            
+        return {"pins": le }
+
+    def post(self, command: str) -> dict: 
+        #check for all off, all on 
+
+        if command == "off": 
+            for led in leds.values():
+                led.off()
+        elif command == "on": 
+            for led in list(leds.values()): 
+                led.on()
+
+        le = []
+        for l,k in leds.items(): 
+            le.append({"pin":l , "state": k.get_state()})
+            print(le)
+
+        return { 
+            "pins": le
+        }
+
+
+
 
 
 def main():
@@ -82,9 +109,12 @@ def main():
 
     api.add_resource(LED, ROUTE_API + ROUTE_LEDS + "/<int:led_pin>")
 
-    # test
+    api.add_resource(LEDS, ROUTE_API + ROUTE_LEDS, endpoint = "get states of all LEDs")
+
     api.add_resource(LED,  ROUTE_API + ROUTE_LEDS +
-                     "/<int:led_pin>/<string:command>", endpoint="turn on LED by pin")
+                     "/<int:led_pin>/<string:command>", endpoint="command LED by pin")
+    api.add_resource(LEDS,  ROUTE_API + ROUTE_LEDS +
+                     "/<string:command>", endpoint="command all LEDs")
 
     # Run the app
     #app.run(host="0.0.0.0", port=5000, debug=DEBUG)
