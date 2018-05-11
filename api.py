@@ -7,7 +7,7 @@ import logging
 ROUTE_API = "/api"
 ROUTE_LEDS = "/leds"
 LOGGER = logging.getLogger("api")
-DEBUG = True
+DEBUG = False
 
 # LED numbers should refer to GPIO number not RPi pin number
 VALID_LEDS = [17, 27, 22]
