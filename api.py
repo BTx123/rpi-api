@@ -6,46 +6,83 @@ import logging
 
 ROUTE_API = "/api"
 ROUTE_LEDS = "/leds"
-DEBUG = False
+LOGGER = logging.getLogger("api")
+DEBUG = True
 
-VALID_LEDS = [17,27,22]  # LED numbers should refer to GPIO number not RPi pin number
+# LED numbers should refer to GPIO number not RPi pin number
+VALID_LEDS = [17, 27, 22]
 leds = {led: LEDController(led) for led in VALID_LEDS}
 
 
 def abort_if_LED_invalid(led_pin: int):
     """Abort the request if invalid pin is chosen and give 404."""
-    if led_pin not in VALID_LEDS:  # TODO: update condition
+    if led_pin not in VALID_LEDS:
         abort(404, message="Pin {pin} not available.".format(pin=led_pin))
+
+
+def get_led(led_pin: int) -> dict:
+    """Return led pin with current state."""
+    return {
+        "led_pin": led_pin,
+        "state": leds[led_pin].get_state()
+    }
 
 
 class HelloWorld(Resource):
     """Demo 'Hello World' resource."""
 
     def get(self):
-        logging.debug("GET: Hello, World!")
+        LOGGER.debug("GET: Hello, World!")
         return {"hello": "world"}
 
 
-class LED(Resource):
-    """LED Control resource."""
+class LEDS(Resource):
+    """Resource for multiple LEDs."""
 
-    def get(self, led_pin: int) -> dict:
-        """GET pin state."""
-        abort_if_LED_invalid(led_pin)
-        state = leds[led_pin].get_state()
-        logging.debug("GET: pin {pin} = {state}".format(
-            pin=led_pin, state=state))
+    def get(self):
+        """GET multiple LED states."""
+        LOGGER.debug("GET: all pins".format())
+
         return {
-            "pin": led_pin,
-            "state": state  # TODO: update field with method call
+            "pins": [get_led(led_pin) for led_pin in leds]
         }
 
-    def post(self, led_pin: int, command: str) -> None:
-        """TODO: POST"""
+    def post(self, command: str) -> dict:
+        """POST commands to all LEDs: on, off, or toggle."""
+        LOGGER.debug("POST: {command} all pins".format(command=command))
+
+        # Check for on, off, toggle
+        if command == "on":
+            for led in leds.values():
+                led.on()
+        elif command == "off":
+            for led in leds.values():
+                led.off()
+        elif command == "toggle":
+            for led in leds.values():
+                led.toggle()
+
+        return {
+            "pins": [get_led(led_pin) for led_pin in leds]
+        }
+
+
+class LED(Resource):
+    """Resource for single LED."""
+
+    def get(self, led_pin: int) -> dict:
+        """GET single pin state."""
         abort_if_LED_invalid(led_pin)
-        logging.debug("POST: {command} pin {pin}".format(
+        LOGGER.debug("GET: pin {pin}".format(pin=led_pin))
+        return get_led(led_pin)
+
+    def post(self, led_pin: int, command: str) -> None:
+        """POST command to single pin: on, off, or toggle."""
+        abort_if_LED_invalid(led_pin)
+        LOGGER.debug("POST: {command} pin {pin}".format(
             command=command, pin=led_pin))
-        # check for on, off, toggle
+
+        # Check for on, off, toggle
         if command == "on":
             leds[led_pin].on()
         elif command == "off":
@@ -54,72 +91,43 @@ class LED(Resource):
             leds[led_pin].toggle()
         else:
             abort(404, message="Command not available.")
-        return {
-            "pin": led_pin,
-            "state": leds[led_pin].get_state()
-        }
 
-
-class LEDS(Resource):
-    def get(self):
-        le = []
-        for l,k in leds.items(): 
-            le.append({"pin":l , "state": k.get_state()})
-            print(le)
-
-        return {"pins": le }
-
-    def post(self, command: str) -> dict: 
-        #check for all off, all on 
-
-        if command == "off": 
-            for led in leds.values():
-                led.off()
-        elif command == "on": 
-            for led in leds.values(): 
-                led.on()
-        elif command == "toggle": 
-            m = map(lambda led: led.toggle() , leds.values()) 
-            list(m)  
-
-        le = []
-        for l,k in leds.items(): 
-            le.append({"pin":l , "state": k.get_state()})
-            print(le)
-
-        return { 
-            "pins": le
-        }
-
-
-
+        return get_led(led_pin)
 
 
 def main():
     # Logging
-    logger = logging.getLogger()
+    api_logger = logging.getLogger("api")
+    controller_logger = logging.getLogger("led_controller")
+    pseudo_logger = logging.getLogger("gpiozero_pseudo")
+    loggers = [api_logger, controller_logger, pseudo_logger]
     if DEBUG:
-        logger.setLevel(logging.DEBUG)
+        for logger in loggers:
+            logger.setLevel(logging.DEBUG)
     else:
-        logger.setLevel(logging.CRITICAL)
+        for logger in loggers:
+            logger.setLevel(logging.CRITICAL)
 
     # Flask application
     app = Flask(__name__)
     api = Api(app)
 
     # Add resources (API endpoints)
-    api.add_resource(HelloWorld, "/api")
-
-    api.add_resource(LED, ROUTE_API + ROUTE_LEDS + "/<int:led_pin>")
-
-    api.add_resource(LEDS, ROUTE_API + ROUTE_LEDS, endpoint = "get states of all LEDs")
-
-    api.add_resource(LED,  ROUTE_API + ROUTE_LEDS +
-                     "/<int:led_pin>/<string:command>", endpoint="command LED by pin")
+    # GET /api
+    api.add_resource(HelloWorld, "/api", endpoint="hello_world")
+    # GET /api/leds
+    api.add_resource(LEDS, ROUTE_API + ROUTE_LEDS, endpoint="all_leds")
+    # POST /api/leds/{{command}}
     api.add_resource(LEDS,  ROUTE_API + ROUTE_LEDS +
-                     "/<string:command>", endpoint="command all LEDs")
+                     "/<string:command>", endpoint="command_all_leds")
+    # GET /api/leds/{{led_pin}}
+    api.add_resource(LED, ROUTE_API + ROUTE_LEDS +
+                     "/<int:led_pin>", endpoint="led_by_pin")
+    # POST /api/leds/{{led_pin}}//{{command}}
+    api.add_resource(LED,  ROUTE_API + ROUTE_LEDS +
+                     "/<int:led_pin>/<string:command>", endpoint="command_led_by_pin")
 
-    # Run the app
+    # Run the app on local network
     app.run(host="0.0.0.0", port=5000, debug=DEBUG)
 
 

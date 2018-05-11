@@ -14,11 +14,13 @@ try:
     import gpiozero
 except Exception as e:
     logging.log(logging.WARNING, "Falling back from gpiozero: {e}".format(e=e))
-    import gpiozero_psuedo as gpiozero
-    logging.log(logging.WARNING, "Now using psuedo gpiozero")
+    import gpiozero_pseudo as gpiozero
+    logging.log(logging.WARNING, "Now using pseudo gpiozero")
 
 
-# XXX: Not tested yet...
+LOGGER = logging.getLogger("led_controller")
+
+
 class LEDController:
     """Controller for LED on Raspberry Pi."""
 
@@ -39,24 +41,24 @@ class LEDController:
         True for on, False for off.
         """
         state = self._led.is_lit
-        logging.debug(
+        LOGGER.debug(
             "get_state: pin {pin} = {state}".format(pin=self._pin, state=state))
         return state
 
     def on(self) -> None:
         """Turn the LED on."""
         self._led.on()
-        logging.debug("on: {pin} = on".format(pin=self._pin))
+        LOGGER.debug("on: {pin} = on".format(pin=self._pin))
 
     def off(self) -> None:
         """Turn the LED off."""
         self._led.off()
-        logging.debug("off: {pin} = off".format(pin=self._pin))
+        LOGGER.debug("off: {pin} = off".format(pin=self._pin))
 
     def toggle(self) -> None:
         """Toggle the LED state."""
         self._led.toggle()
-        logging.debug("toggle: {pin} = {state}".format(
+        LOGGER.debug("toggle: {pin} = {state}".format(
             pin=self._pin, state=self._led.is_lit))
 
 
