@@ -6,7 +6,7 @@ import logging
 
 ROUTE_API = "/api"
 ROUTE_LEDS = "/leds"
-DEBUG = True
+DEBUG = False
 
 VALID_LEDS = [17,27,22]  # LED numbers should refer to GPIO number not RPi pin number
 leds = {led: LEDController(led) for led in VALID_LEDS}
@@ -120,8 +120,7 @@ def main():
                      "/<string:command>", endpoint="command all LEDs")
 
     # Run the app
-    #app.run(host="0.0.0.0", port=5000, debug=DEBUG)
-    app.run(debug=DEBUG)
+    app.run(host="0.0.0.0", port=5000, debug=DEBUG)
 
 
 if __name__ == "__main__":
