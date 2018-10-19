@@ -100,3 +100,6 @@ ENV/
 
 # vscode
 .vscode/
+
+# Windows executable
+*.exe
