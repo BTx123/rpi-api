@@ -16,14 +16,14 @@ A Raspberry Pi (we used a Raspberry Pi 3 Model B) to act as a server with the fo
 
 Optionally, you may want to:
 * [Setup SSH](https://www.raspberrypi.org/documentation/remote-access/ssh/) to edit and test scripts directly on the Pi.
-* Use [Angry IP Scanner](http://angryip.org/) to find a Pi's IP address on the *same* network without needing to connect to Pi to external displays and input devices.
+* Use [Angry IP Scanner](http://angryip.org/) to find a Pi's IP address on the *same* network without needing to connect the Pi to external displays and input devices.
 
 ### Running on a Raspberry Pi Server
 1. To get a local copy of the repository, run `git clone https://github.com/BTx123/rpi-api.git`.
 2. Start the server on http://0.0.0.0:5000 with `python3 api.py`, allowing local network clients to send API requests. If any errors appear, see [Prerequisites](#prerequisites) above.
 3. After confirming that your server is running, navigate to a browser, [Postman](https://www.getpostman.com/), or any REST client to make [API requests](#api-routes). `{{server_IP_address}}` should be replaced by the IP address of your Pi. Examples below:
     * `GET http://{{server_IP_address}}:5000/api/led/17` - send a `GET` request to the server on port 5000 to read the state of GPIO pin 17
-    * `POST http://{{server_IP_address}}:5000/api/led/17/toggle` - send a `POST` request to toggle the stat of GPIO pin 17
+    * `POST http://{{server_IP_address}}:5000/api/led/17/toggle` - send a `POST` request to toggle the state of GPIO pin 17
 4. Sending a request should toggle pins between HIGH and LOW states, thus turning connected LEDs, or whatever is connected to the GPIO pins, on and off.
 
 ### Setting up a Simple Circuit
