@@ -1,6 +1,10 @@
 # Raspberry Pi API
 The Raspberry Pi API creates a server to control General-Purpose Input/Output (GPIO) pins on the Pi over a local netowrk. The script utilizes [`flask_restful`](http://flask-restful.readthedocs.io/en/latest/index.html) to serve content and [`gpiozero`](https://gpiozero.readthedocs.io/en/stable/) to control the onboard GPIO pins. Currently, the API restricts the use of GPIO pins to predefined ones, but could certainly be extended to allow any GPIO pin to be added and used. See below for setup instructions and API routes.
 
+## TODO
+* Add/Remove pins to valid list of pins via REST
+* Implement UI
+
 ## Getting Started
 These instructions will get you a copy of the project up and running on your local machine for development and testing purposes.
 
@@ -9,7 +13,7 @@ A Raspberry Pi (we used a Raspberry Pi 3 Model B) to act as a server with the fo
 * Linux distribution of your choice - we chose the minimal [Raspbian Stretch Lite](https://www.raspberrypi.org/downloads/raspbian/), but it should also work with the Desktop version
 * [Python 3](https://www.python.org/) (developed using Python 3.6) and [pip](https://packaging.python.org/tutorials/installing-packages/) to run the scripts and easily install packages.
 * Python packages (listed under [Built With](#built-with) below, which you can install by running `pip install -r requirements.txt`.
-    
+
 Optionally, you may want to:
 * [Setup SSH](https://www.raspberrypi.org/documentation/remote-access/ssh/) to edit and test scripts directly on the Pi.
 * Use [Angry IP Scanner](http://angryip.org/) to find a Pi's IP address on the *same* network without needing to connect to Pi to external displays and input devices.
@@ -48,3 +52,7 @@ Available routes are listed in the table below. `{{id}}` should be replaced with
 
 ## License
 This project is licensed under the MIT License - see the [LICENSE.md](https://github.com/BTx123/rpi-api/blob/master/LICENSE.md) file for details
+
+## Contributors
+* [Ruth Nguyen](https://github.com/ruthienguyen)
+* [Brian Tom](https://github.com/BTx123)
