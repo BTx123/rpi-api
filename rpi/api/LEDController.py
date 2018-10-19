@@ -1,6 +1,8 @@
 """
 LEDController.py
 
+Controller for LED on Raspberry Pi.
+
 gpiozero
 Basics Documentation: http://gpiozero.readthedocs.io/en/stable/recipes.html
 LED Documentation: http://gpiozero.readthedocs.io/en/stable/api_output.html?highlight=LED

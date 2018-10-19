@@ -14,7 +14,7 @@ VALID_LEDS = [17, 27, 22]
 leds = {led: LEDController(led) for led in VALID_LEDS}
 
 
-def abort_if_LED_invalid(led_pin: int):
+def abort_if_LED_invalid(led_pin: int) -> None:
     """Abort the request if invalid pin is chosen and give 404."""
     if led_pin not in VALID_LEDS:
         abort(404, message="Pin {pin} not available.".format(pin=led_pin))
@@ -39,7 +39,7 @@ class HelloWorld(Resource):
 class LEDS(Resource):
     """Resource for multiple LEDs."""
 
-    def get(self):
+    def get(self) -> dict:
         """GET multiple LED states."""
         LOGGER.debug("GET: all pins".format())
 
@@ -76,7 +76,7 @@ class LED(Resource):
         LOGGER.debug("GET: pin {pin}".format(pin=led_pin))
         return get_led(led_pin)
 
-    def post(self, led_pin: int, command: str) -> None:
+    def post(self, led_pin: int, command: str) -> dict:
         """POST command to single pin: on, off, or toggle."""
         abort_if_LED_invalid(led_pin)
         LOGGER.debug("POST: {command} pin {pin}".format(
@@ -125,7 +125,8 @@ def main():
                      "/<int:led_pin>", endpoint="led_by_pin")
     # POST /api/leds/{{led_pin}}//{{command}}
     api.add_resource(LED,  ROUTE_API + ROUTE_LEDS +
-                     "/<int:led_pin>/<string:command>", endpoint="command_led_by_pin")
+                     "/<int:led_pin>/<string:command>",
+                     endpoint="command_led_by_pin")
 
     # Run the app on local network
     app.run(host="0.0.0.0", port=5000, debug=DEBUG)
