@@ -1,1 +1,1 @@
-name = "rpi-api"
+name = "rpi"
