@@ -3,7 +3,7 @@ The Raspberry Pi API creates a server to control General-Purpose Input/Output (G
 
 ## TODO
 * Add/Remove pins to valid list of pins via REST
-* Implement UI
+* Implement UI with simulation
 
 ## Getting Started
 These instructions will get you a copy of the project up and running on your local machine for development and testing purposes.
@@ -31,7 +31,9 @@ Below is a sample circuit, consisting of a resistor in series with a LED.
 <img src="https://github.com/BTx123/rpi-api/blob/master/circuit-diagram.png" alt="Whoops, image is missing!" width="50%">
 
 ## API Routes
-Available routes are listed in the table below. `{{id}}` should be replaced with the *GPIO* pin number, not the *Raspberry Pi* pin number. Raspberry Pi's [GPIO usage guide](https://www.raspberrypi.org/documentation/usage/gpio/) has more information regarding GPIO pin numbering.
+Available routes are listed in the table below. [Link](https://www.getpostman.com/collections/e0f69c3b0b4844c131a5) to Postman Collection.
+
+Note: `{{id}}` should be replaced with the *GPIO* pin number, not the *Raspberry Pi* pin number. Raspberry Pi's [GPIO usage guide](https://www.raspberrypi.org/documentation/usage/gpio/) has more information regarding GPIO pin numbering.
 
 | Method | Route                     | Description             |
 |--------|---------------------------|-------------------------|
