@@ -51,6 +51,7 @@ Note: `{{id}}` should be replaced with the *GPIO* pin number, not the *Raspberry
 * [Python 3.6](https://www.python.org/)
 * [gpiozero](https://gpiozero.readthedocs.io/en/stable/): simple GPIO interfacing with Raspberry Pi
 * [flask_restful](http://flask-restful.readthedocs.io/en/latest/index.html): quickly build a Flask API
+* [Postman](https://www.getpostman.com/)
 
 ## License
 This project is licensed under the MIT License - see the [LICENSE.md](https://github.com/BTx123/rpi-api/blob/master/LICENSE.md) file for details
