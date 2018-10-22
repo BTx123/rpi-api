@@ -2,6 +2,7 @@ from flask import Flask
 from flask_restful import Resource, Api, abort
 import logging
 
+
 try:
     import gpiozero
 except Exception as e:
@@ -10,10 +11,13 @@ except Exception as e:
     logging.log(logging.WARNING, "Now using pseudo gpiozero")
 
 
-ROUTE_API = "/api"
-ROUTE_LEDS = "/leds"
+# Logging and debugging
 LOGGER = logging.getLogger(__name__)
 DEBUG = True
+
+# Routing API
+ROUTE_API = "/api"
+ROUTE_LEDS = "/leds"
 
 # LED numbers should refer to GPIO number not RPi pin number
 VALID_LEDS = [17, 27, 22]
