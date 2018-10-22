@@ -2,7 +2,7 @@
 The Raspberry Pi API creates a server to control General-Purpose Input/Output (GPIO) pins on the Pi over a local netowrk. The script utilizes [`flask_restful`](http://flask-restful.readthedocs.io/en/latest/index.html) to serve content and [`gpiozero`](https://gpiozero.readthedocs.io/en/stable/) to control the onboard GPIO pins. Currently, the API restricts the use of GPIO pins to predefined ones, but could certainly be extended to allow any GPIO pin to be added and used. See below for setup instructions and API routes.
 
 ## TODO
-* Add/Remove pins to valid list of pins via REST
+* Add/Remove pins to valid list of pins via RESTful API, other routes TBD
 * Implement UI with simulation
 
 ## Getting Started
