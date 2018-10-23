@@ -124,11 +124,14 @@ def main():
     # Add resources (API endpoints)
     # GET /api
     api.add_resource(HelloWorld, "/api", endpoint="hello_world")
+    # TODO: PUT /api/leds
     # GET /api/leds
     api.add_resource(LEDS, ROUTE_API + ROUTE_LEDS, endpoint="all_leds")
     # POST /api/leds/{{command}}
     api.add_resource(LEDS, ROUTE_API + ROUTE_LEDS +
                      "/<string:command>", endpoint="command_all_leds")
+    # TODO: DELETE /api/leds
+    # TODO: PUT /api/leds/{{led_pin}}
     # GET /api/leds/{{led_pin}}
     api.add_resource(LED, ROUTE_API + ROUTE_LEDS +
                      "/<int:led_pin>", endpoint="led_by_pin")
@@ -136,6 +139,7 @@ def main():
     api.add_resource(LED, ROUTE_API + ROUTE_LEDS +
                      "/<int:led_pin>/<string:command>",
                      endpoint="command_led_by_pin")
+    # TODO: DELETE /api/leds/{{led_pin}}
 
     # Run the app on local network: 127.0.0.1:5000
     app.run(host="0.0.0.0", port=5000, debug=DEBUG)
