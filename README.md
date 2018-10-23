@@ -12,7 +12,7 @@ These instructions will get you a copy of the project up and running on your loc
 A Raspberry Pi (we used a Raspberry Pi 3 Model B) to act as a server with the following:
 * Linux distribution of your choice - we chose the minimal [Raspbian Stretch Lite](https://www.raspberrypi.org/downloads/raspbian/), but it should also work with the Desktop version
 * [Python 3](https://www.python.org/) (developed using Python 3.6) and [pip](https://packaging.python.org/tutorials/installing-packages/) to run the scripts and easily install packages.
-* Python packages (listed under [Built With](#built-with) below, which you can install by running `pip install -r requirements.txt`.
+* Python packages (listed under [Built With](#built-with) below, which you can install by running `python3 -m pip install -r requirements.txt`.
 
 Optionally, you may want to:
 * [Setup SSH](https://www.raspberrypi.org/documentation/remote-access/ssh/) to edit and test scripts directly on the Pi.
@@ -20,7 +20,7 @@ Optionally, you may want to:
 
 ### Running on a Raspberry Pi Server
 1. To get a local copy of the repository, run `git clone https://github.com/BTx123/rpi-api.git`.
-2. Start the server on http://0.0.0.0:5000 with `python3 api.py`, allowing local network clients to send API requests. If any errors appear, see [Prerequisites](#prerequisites) above.
+2. Start the server on http://0.0.0.0:5000 with `python3 rpi/api.py`, allowing local network clients to send API requests. If any errors appear, see [Prerequisites](#prerequisites) above.
 3. After confirming that your server is running, navigate to a browser, [Postman](https://www.getpostman.com/), or any REST client to make [API requests](#api-routes). `{{server_IP_address}}` should be replaced by the IP address of your Pi. Examples below:
     * `GET http://{{server_IP_address}}:5000/api/led/17` - send a `GET` request to the server on port 5000 to read the state of GPIO pin 17
     * `POST http://{{server_IP_address}}:5000/api/led/17/toggle` - send a `POST` request to toggle the state of GPIO pin 17
