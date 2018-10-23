@@ -1,3 +1,10 @@
+"""
+api.py
+
+Implement a RESTful API for LED control with Flask.
+"""
+
+
 from flask import Flask
 from flask_restful import Resource, Api, abort
 import logging

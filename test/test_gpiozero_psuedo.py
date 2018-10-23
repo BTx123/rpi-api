@@ -1,5 +1,5 @@
 import unittest
-from rpi import gpiozero_pseudo
+from rpi_api import gpiozero_pseudo
 
 
 class TestGPIOZeroPsuedo(unittest.TestCase):
