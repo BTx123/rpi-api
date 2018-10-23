@@ -33,3 +33,11 @@ class LED:
         self.is_lit = not self.is_lit
         LOGGER.debug("LED {pin} toggled to {state}".format(
             pin=self.pin, state=LED._bool_to_str(self.is_lit)))
+
+
+if __name__ == "__main__":
+    print(LED._bool_to_str(True))
+    led = LED(17)
+    led.on()
+    led.off()
+    led.toggle()
