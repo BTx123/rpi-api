@@ -47,7 +47,7 @@ Note: `{{id}}` should be replaced with the *GPIO* pin number, not the *Raspberry
 | `POST` | `/api/leds/{{id}}/toggle` | Toggle single LED       |
 | `PUT`  | `/api/leds/{{id}}`        | Add single LED          |
 | `DELETE`| `/api/leds/{{id}}`       | Delete single LED       |
-| `DELETE`| `/api/leds/`             | Delete all LED          |
+| `DELETE`| `/api/leds`             | Delete all LED          |
 
 
 ## Built With
