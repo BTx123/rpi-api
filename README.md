@@ -35,20 +35,19 @@ Available routes are listed in the table below. [Link](https://www.getpostman.co
 
 Note: `{{id}}` should be replaced with the *GPIO* pin number, not the *Raspberry Pi* pin number. Raspberry Pi's [GPIO usage guide](https://www.raspberrypi.org/documentation/usage/gpio/) has more information regarding GPIO pin numbering.
 
-| Method | Route                     | Description             |
-|--------|---------------------------|-------------------------|
-| `GET`  | `/api/leds`               | Get state of all LEDs   |
-| `GET`  | `/api/leds/{{id}}`        | Get state of single LED |
-| `POST` | `/api/leds/on`            | Set all LEDs to HIGH    |
-| `POST` | `/api/leds/off`           | Set all LEDs to LOW     |
-| `POST` | `/api/leds/toggle`        | Toggle all LEDs         |
-| `POST` | `/api/leds/{{id}}/on`     | Set single LED to HIGH  |
-| `POST` | `/api/leds/{{id}}/off`    | Set single LED to LOW   |
-| `POST` | `/api/leds/{{id}}/toggle` | Toggle single LED       |
-| `PUT`  | `/api/leds/{{id}}`        | Add single LED          |
-| `DELETE`| `/api/leds/{{id}}`       | Delete single LED       |
-| `DELETE`| `/api/leds`             | Delete all LED          |
-
+| Method  | Route                     | Description             |
+|---------|---------------------------|-------------------------|
+| `GET`   | `/api/leds`               | Get state of all LEDs   |
+| `GET`   | `/api/leds/{{id}}`        | Get state of single LED |
+| `POST`  | `/api/leds/on`            | Set all LEDs to HIGH    |
+| `POST`  | `/api/leds/off`           | Set all LEDs to LOW     |
+| `POST`  | `/api/leds/toggle`        | Toggle all LEDs         |
+| `POST`  | `/api/leds/{{id}}/on`     | Set single LED to HIGH  |
+| `POST`  | `/api/leds/{{id}}/off`    | Set single LED to LOW   |
+| `POST`  | `/api/leds/{{id}}/toggle` | Toggle single LED       |
+| `PUT`   | `/api/leds/{{id}}`        | Add single LED          |
+| `DELETE`| `/api/leds`               | Delete all LED          |
+| `DELETE`| `/api/leds/{{id}}`        | Delete single LED       |
 
 ## Built With
 * [Raspberry Pi 3 Model B](https://www.raspberrypi.org/products/raspberry-pi-3-model-b/)
