@@ -83,6 +83,16 @@ class LEDS(Resource): # give the multiple LEDs
         '''Handle exception if led already exist'''
         abort(404, message="Pin should be specific.")
     
+
+    def delete(self) -> dict:
+        """DELETE command to delete all LED"""
+        VALID_LEDS.clear()
+        leds.clear()
+        return {
+            "pins": [get_led(led_pin) for led_pin in leds]
+        }
+    
+    
 class LED(Resource): # signle assess to the LED
     """Resource for single LED."""
 
@@ -172,6 +182,10 @@ def main():
     # DELETE /api/leds/{{led_pin}}
     api.add_resource(LED, ROUTE_API + ROUTE_LEDS +
                     "/<int:led_pin>", endpoint = "delete_led")
+    
+    # DELETE /api/leds
+    api.add_resource(LEDS, ROUTE_API + ROUTE_LEDS, 
+                    endpoint = "delete_all_led")
 
     # Run the app on local network: 127.0.0.1:5000
     app.run(host="0.0.0.0", port=5000, debug=DEBUG)
