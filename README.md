@@ -45,6 +45,10 @@ Note: `{{id}}` should be replaced with the *GPIO* pin number, not the *Raspberry
 | `POST` | `/api/leds/{{id}}/on`     | Set single LED to HIGH  |
 | `POST` | `/api/leds/{{id}}/off`    | Set single LED to LOW   |
 | `POST` | `/api/leds/{{id}}/toggle` | Toggle single LED       |
+| `PUT`  | `/api/leds/{{id}}`        | Add single LED          |
+| `DELETE`| `/api/leds/{{id}}`       | Delete single LED       |
+| `DELETE`| `/api/leds/`             | Delete all LED          |
+
 
 ## Built With
 * [Raspberry Pi 3 Model B](https://www.raspberrypi.org/products/raspberry-pi-3-model-b/)
