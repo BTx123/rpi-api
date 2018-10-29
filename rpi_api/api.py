@@ -79,10 +79,9 @@ class LEDS(Resource): # give the multiple LEDs
             "pins": [get_led(led_pin) for led_pin in leds]
         }
     
-    def put(self, **leds_pin: int) -> dict:
+    def put(self) -> dict:
         '''Handle exception if led already exist'''
-        if len(leds_pin) == 0:
-            abort(404, message="Pin should be specific.")
+        abort(404, message="Pin should be specific.")
     
 class LED(Resource): # signle assess to the LED
     """Resource for single LED."""
@@ -118,6 +117,17 @@ class LED(Resource): # signle assess to the LED
         return {
             "pins": [get_led(led_pin) for led_pin in leds]
         }
+
+    def delete(self, led_pin: int) -> dict:
+        """DELETE command to delete an existing LED"""
+        abort_if_LED_invalid(led_pin) # Check if the LED inside the list
+
+        VALID_LEDS.remove(led_pin)
+        del leds[led_pin]
+        return {
+            "pins": [get_led(led_pin) for led_pin in leds]
+        }
+    
 
 
 def main():
