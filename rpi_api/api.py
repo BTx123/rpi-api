@@ -121,6 +121,12 @@ class LED(Resource): # signle assess to the LED
     
     def put(self, led_pin: int) -> dict:
         """PUT command to create new LED"""
+        if led_pin in leds.keys():
+                   
+            return {
+                "message": "the pin is already in",
+                "pins": [get_led(led_pin) for led_pin in leds]
+            }
         VALID_LEDS.append(led_pin)
         leds[led_pin] = gpiozero.LED(led_pin)
 
