@@ -28,11 +28,14 @@ ROUTE_LEDS = "/leds"
 
 # LED numbers should refer to GPIO number not RPi pin number
 leds = dict()
+
+
 def abort_if_LED_invalid(led_pin: int) -> None:
     """Abort the request if invalid pin is chosen and give 404."""
 
     if led_pin not in leds.keys():
         abort(404, message="Pin {pin} not available.".format(pin=led_pin))
+
 
 def get_led(led_pin: int) -> dict:
     """Return led pin with current state."""
@@ -136,6 +139,7 @@ class LED(Resource):
         return {
             "pins": [get_led(led_pin) for led_pin in leds]
         }
+
     def delete(self, led_pin: int) -> dict:
         """DELETE command to delete an existing LED"""
         abort_if_LED_invalid(led_pin)
