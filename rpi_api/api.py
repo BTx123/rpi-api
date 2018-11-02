@@ -34,7 +34,6 @@ def abort_if_LED_invalid(led_pin: int) -> None:
     if led_pin not in leds.keys():
         abort(404, message="Pin {pin} not available.".format(pin=led_pin))
 
-
 def get_led(led_pin: int) -> dict:
     """Return led pin with current state."""
 
@@ -59,6 +58,13 @@ class LEDS(Resource):
         """GET multiple LED states."""
         LOGGER.debug("GET: all pins".format())
 
+        return {
+            "pins": [get_led(led_pin) for led_pin in leds]
+        }
+
+    def put(self) -> dict:
+        """PUT multiple LED states."""
+        LOGGER.debug("PUT: all pins".format())
         return {
             "pins": [get_led(led_pin) for led_pin in leds]
         }
@@ -126,7 +132,7 @@ class LED(Resource):
         if led_pin in leds.keys():
 
             return {
-                "message": "the pin is already in",
+                "message": "Pin #{pin} is already in place".format(pin=led_pin),
                 "pins": [get_led(led_pin) for led_pin in leds]
             }
         leds[led_pin] = gpiozero.LED(led_pin)
@@ -134,11 +140,9 @@ class LED(Resource):
         return {
             "pins": [get_led(led_pin) for led_pin in leds]
         }
-
     def delete(self, led_pin: int) -> dict:
         """DELETE command to delete an existing LED"""
         abort_if_LED_invalid(led_pin)
-
         del leds[led_pin]
         return {
             "pins": [get_led(led_pin) for led_pin in leds]
