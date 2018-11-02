@@ -1,7 +1,7 @@
 """
 api.py
 
-Implement a RESTful API for LED control with Flask.
+Make a RESTful API on a Raspberry Pi.
 """
 
 
@@ -22,19 +22,18 @@ except Exception as e:
 LOGGER = logging.getLogger(__name__)
 DEBUG = True
 
-# Routing API
+# Routing API   host/api/led/17
 ROUTE_API = "/api"
 ROUTE_LEDS = "/leds"
 
 # LED numbers should refer to GPIO number not RPi pin number
-VALID_LEDS = [17, 27, 22]
-leds = {led: gpiozero.LED(led) for led in VALID_LEDS}
+leds = dict()
 
 
 def abort_if_LED_invalid(led_pin: int) -> None:
     """Abort the request if invalid pin is chosen and give 404."""
 
-    if led_pin not in VALID_LEDS:
+    if led_pin not in leds.keys():
         abort(404, message="Pin {pin} not available.".format(pin=led_pin))
 
 
@@ -85,6 +84,19 @@ class LEDS(Resource):
             "pins": [get_led(led_pin) for led_pin in leds]
         }
 
+    def put(self) -> dict:
+        """Handle exception if led already exist"""
+        LOGGER.debug("PUT: invalid")
+        abort(404, message="Pin should be specific.")
+
+    def delete(self) -> dict:
+        """DELETE command to delete all pins"""
+        LOGGER.debug("DELETE: all pins")
+        leds.clear()
+        return {
+            "pins": [get_led(led_pin) for led_pin in leds]
+        }
+
 
 class LED(Resource):
     """Resource for single LED."""
@@ -92,7 +104,7 @@ class LED(Resource):
     def get(self, led_pin: int) -> dict:
         """GET single pin state."""
         abort_if_LED_invalid(led_pin)
-        LOGGER.debug("GET: pin {pin}".format(pin=led_pin))
+        LOGGER.debug("GET: Pin {pin}".format(pin=led_pin))
         return get_led(led_pin)
 
     def post(self, led_pin: int, command: str) -> dict:
@@ -100,7 +112,6 @@ class LED(Resource):
         abort_if_LED_invalid(led_pin)
         LOGGER.debug("POST: {command} pin {pin}".format(
             command=command, pin=led_pin))
-
         # Check for on, off, toggle
         if command == "on":
             leds[led_pin].on()
@@ -109,9 +120,34 @@ class LED(Resource):
         elif command == "toggle":
             leds[led_pin].toggle()
         else:
+            # Event is not valid
             abort(404, message="Command not available.")
 
         return get_led(led_pin)
+
+    def put(self, led_pin: int) -> dict:
+        """PUT command to create new LED"""
+        LOGGER.debug("PUT: Pin {pin}".format(pin=led_pin))
+        if led_pin in leds.keys():
+
+            return {
+                "message": "Pin #{pin} is already in place".format(pin=led_pin),
+                "pins": [get_led(led_pin) for led_pin in leds]
+            }
+        leds[led_pin] = gpiozero.LED(led_pin)
+
+        return {
+            "pins": [get_led(led_pin) for led_pin in leds]
+        }
+
+    def delete(self, led_pin: int) -> dict:
+        """DELETE command to delete an existing LED"""
+        abort_if_LED_invalid(led_pin)
+        LOGGER.debug("DELETE: Pin {pin}".format(pin=led_pin))
+        del leds[led_pin]
+        return {
+            "pins": [get_led(led_pin) for led_pin in leds]
+        }
 
 
 def main():
@@ -131,22 +167,33 @@ def main():
     # Add resources (API endpoints)
     # GET /api
     api.add_resource(HelloWorld, "/api", endpoint="hello_world")
-    # TODO: PUT /api/leds
     # GET /api/leds
     api.add_resource(LEDS, ROUTE_API + ROUTE_LEDS, endpoint="all_leds")
-    # POST /api/leds/{{command}}
-    api.add_resource(LEDS, ROUTE_API + ROUTE_LEDS +
-                     "/<string:command>", endpoint="command_all_leds")
-    # TODO: DELETE /api/leds
-    # TODO: PUT /api/leds/{{led_pin}}
     # GET /api/leds/{{led_pin}}
     api.add_resource(LED, ROUTE_API + ROUTE_LEDS +
                      "/<int:led_pin>", endpoint="led_by_pin")
-    # POST /api/leds/{{led_pin}}//{{command}}
+
+    # POST /api/leds/{{command}}
+    api.add_resource(LEDS, ROUTE_API + ROUTE_LEDS +
+                     "/<string:command>", endpoint="command_all_leds")
+    # POST /api/leds/{{led_pin}}/{{command}}
     api.add_resource(LED, ROUTE_API + ROUTE_LEDS +
                      "/<int:led_pin>/<string:command>",
                      endpoint="command_led_by_pin")
-    # TODO: DELETE /api/leds/{{led_pin}}
+
+    # PUT /api/leds
+    api.add_resource(LEDS, ROUTE_API + ROUTE_LEDS,
+                     endpoint="put_led_illegal")
+    # PUT /api/leds/{{led_pin}}
+    api.add_resource(LED, ROUTE_API + ROUTE_LEDS +
+                     "/<int:led_pin>", endpoint="put_led")
+
+    # DELETE /api/leds
+    api.add_resource(LEDS, ROUTE_API + ROUTE_LEDS,
+                     endpoint="delete_all_led")
+    # DELETE /api/leds/{{led_pin}}
+    api.add_resource(LED, ROUTE_API + ROUTE_LEDS +
+                     "/<int:led_pin>", endpoint="delete_led")
 
     # Run the app on local network: 127.0.0.1:5000
     app.run(host="0.0.0.0", port=5000, debug=DEBUG)
