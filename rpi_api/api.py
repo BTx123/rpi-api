@@ -62,13 +62,6 @@ class LEDS(Resource):
             "pins": [get_led(led_pin) for led_pin in leds]
         }
 
-    def put(self) -> dict:
-        """PUT multiple LED states."""
-        LOGGER.debug("PUT: all pins".format())
-        return {
-            "pins": [get_led(led_pin) for led_pin in leds]
-        }
-
     def post(self, command: str) -> dict:
         """POST commands to all LEDs: on, off, or toggle."""
         LOGGER.debug("POST: {command} all pins".format(command=command))
@@ -90,10 +83,12 @@ class LEDS(Resource):
 
     def put(self) -> dict:
         """Handle exception if led already exist"""
+        LOGGER.debug("PUT: invalid")
         abort(404, message="Pin should be specific.")
 
     def delete(self) -> dict:
-        """DELETE command to delete all LED"""
+        """DELETE command to delete all pins"""
+        LOGGER.debug("DELETE: all pins")
         leds.clear()
         return {
             "pins": [get_led(led_pin) for led_pin in leds]
@@ -106,7 +101,7 @@ class LED(Resource):
     def get(self, led_pin: int) -> dict:
         """GET single pin state."""
         abort_if_LED_invalid(led_pin)
-        LOGGER.debug("GET: pin {pin}".format(pin=led_pin))
+        LOGGER.debug("GET: Pin {pin}".format(pin=led_pin))
         return get_led(led_pin)
 
     def post(self, led_pin: int, command: str) -> dict:
@@ -129,6 +124,7 @@ class LED(Resource):
 
     def put(self, led_pin: int) -> dict:
         """PUT command to create new LED"""
+        LOGGER.debug("PUT: Pin {pin}".format(pin=led_pin))
         if led_pin in leds.keys():
 
             return {
@@ -143,6 +139,7 @@ class LED(Resource):
     def delete(self, led_pin: int) -> dict:
         """DELETE command to delete an existing LED"""
         abort_if_LED_invalid(led_pin)
+        LOGGER.debug("DELETE: Pin {pin}".format(pin=led_pin))
         del leds[led_pin]
         return {
             "pins": [get_led(led_pin) for led_pin in leds]
