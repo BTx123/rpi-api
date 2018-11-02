@@ -27,14 +27,11 @@ ROUTE_API = "/api"
 ROUTE_LEDS = "/leds"
 
 # LED numbers should refer to GPIO number not RPi pin number
-VALID_LEDS = [17, 27, 22]  # the ID  for the LED
-leds = {led: gpiozero.LED(led) for led in VALID_LEDS}
-
-
+leds = dict()
 def abort_if_LED_invalid(led_pin: int) -> None:
     """Abort the request if invalid pin is chosen and give 404."""
 
-    if led_pin not in VALID_LEDS:
+    if led_pin not in leds.keys():
         abort(404, message="Pin {pin} not available.".format(pin=led_pin))
 
 
@@ -91,7 +88,6 @@ class LEDS(Resource):
 
     def delete(self) -> dict:
         """DELETE command to delete all LED"""
-        VALID_LEDS.clear()
         leds.clear()
         return {
             "pins": [get_led(led_pin) for led_pin in leds]
@@ -133,7 +129,6 @@ class LED(Resource):
                 "message": "the pin is already in",
                 "pins": [get_led(led_pin) for led_pin in leds]
             }
-        VALID_LEDS.append(led_pin)
         leds[led_pin] = gpiozero.LED(led_pin)
 
         return {
@@ -144,7 +139,6 @@ class LED(Resource):
         """DELETE command to delete an existing LED"""
         abort_if_LED_invalid(led_pin)
 
-        VALID_LEDS.remove(led_pin)
         del leds[led_pin]
         return {
             "pins": [get_led(led_pin) for led_pin in leds]
