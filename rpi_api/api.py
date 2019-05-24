@@ -143,7 +143,7 @@ class LED(Resource):
                 LOGGER.debug("Error inserting value into table")
 
             return {
-                "message": "Pin #{pin} is already in place".format(pin=led_pin),
+                "message": "Pin {pin} already exists.".format(pin=led_pin),
                 "pins": [get_led(led_pin) for led_pin in leds]
             }
         leds[led_pin] = gpiozero.LED(led_pin)
