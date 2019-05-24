@@ -6,10 +6,15 @@ Connect to a MySQL database.
 
 import mysql.connector
 from mysql.connector import errorcode
+import logging
 
-from simhome.utils.custom_logger import make_logger
+# Logging and debugging
+LOGGER = logging.getLogger(__name__)
+DEBUG = True
 
-LOGGER = make_logger(__name__)
+#from simhome.utils.custom_logger import make_logger
+
+#LOGGER = make_logger(__name__)
 
 
 class DatabaseConnectionError(Exception):
@@ -91,9 +96,16 @@ class DatabaseConnection:
     def execute(self, value: dict):
         """Insert Value into database
             :param value: tuple of ledPin and ledState"""
-        query = "INSERT INTO pinValues VALUES('{}', '{}')".format(value[0], value[1])
-        self._cursor().execute(query)
-        self._commit()
+        ledPin = value["led_pin"]
+        ledState = 0
+        if value["state"] == False: ledState = 0
+        else: ledState = 1
+        query = "INSERT INTO pinValues(pinNumber, pinState) VALUES('{}', '{}');".format(ledPin, ledState)
+        LOGGER.debug("Inserted ledPin '{}' with state '{}' into the database".format(ledPin, ledState))
+        cursor = self._cursor
+        cursor.execute(query)
+        self.commit()
+    
 
     def commit(self) -> None:
         """Commit current transaction."""
