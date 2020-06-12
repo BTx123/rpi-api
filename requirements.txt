@@ -1,2 +1,4 @@
 flask_restful
 gpiozero
+mysql-connector
+sshtunnel

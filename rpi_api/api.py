@@ -8,6 +8,8 @@ Make a RESTful API on a Raspberry Pi.
 from flask import Flask
 from flask_restful import Resource, Api, abort
 import logging
+from mysqlDatabase import DatabaseConnection
+from mysql_ssh import DatabaseConnectionSSH
 
 
 try:
@@ -21,6 +23,9 @@ except Exception as e:
 # Logging and debugging
 LOGGER = logging.getLogger(__name__)
 DEBUG = True
+
+#MYSQL Connection
+sshConnection = DatabaseConnectionSSH({"host": "127.0.0.1", "port": "3306", "user": "root", "password":"Calplug2016","database": "rpi_api"}, {'ssh_address': 'cpmqtt1.calit2.uci.edu', 'remote_bind_address':('cpmqtt1.calit2.uci.edu', 3306), 'local_bind_address':('127.0.0.1', 3306), 'ssh_username': 'calplug', 'ssh_password':'Calplug2016'})
 
 # Routing API   host/api/led/17
 ROUTE_API = "/api"
@@ -122,19 +127,30 @@ class LED(Resource):
         else:
             # Event is not valid
             abort(404, message="Command not available.")
-
+        try:
+            sshConnection.execute((get_led(led_pin)))
+        except:
+            LOGGER.debug("Error inserting value into table")
         return get_led(led_pin)
 
     def put(self, led_pin: int) -> dict:
         """PUT command to create new LED"""
         LOGGER.debug("PUT: Pin {pin}".format(pin=led_pin))
         if led_pin in leds.keys():
+            try:
+                sshConnection.execute((get_led(led_pin)))
+            except:
+                LOGGER.debug("Error inserting value into table")
 
             return {
-                "message": "Pin #{pin} is already in place".format(pin=led_pin),
+                "message": "Pin {pin} already exists.".format(pin=led_pin),
                 "pins": [get_led(led_pin) for led_pin in leds]
             }
         leds[led_pin] = gpiozero.LED(led_pin)
+        try:
+            sshConnection.execute((get_led(led_pin)))
+        except:
+            LOGGER.debug("Error inserting value into table")
 
         return {
             "pins": [get_led(led_pin) for led_pin in leds]
